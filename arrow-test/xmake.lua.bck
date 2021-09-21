@@ -1,0 +1,29 @@
+add_rules("mode.debug", "mode.release")
+
+package("apache-arrow")
+    set_description("Apache arrow")
+
+    add_urls("https://github.com/apache/arrow.git")
+
+    on_install(function (package)
+        local configs = {}
+        if package:config("shared") then
+            configs.kind = "shared"
+        end
+        os.cd("cpp")
+        import("package.tools.cmake").install(package, configs)
+    end)
+
+    on_test(function (package)
+        -- TODO check includes and interfaces
+        -- assert(package:has_cfuncs("foo", {includes = "foo.h"})
+    end)
+package_end()
+
+add_requires("apache-arrow")
+
+
+target("great-loader")
+    set_kind("binary")
+    add_packages("apache-arrow")
+    add_files("src/*.cpp")

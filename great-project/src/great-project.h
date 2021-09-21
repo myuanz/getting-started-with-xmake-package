@@ -1,0 +1,1 @@
+double solve(int x, int y);
